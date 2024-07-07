@@ -174,6 +174,11 @@ export default function BusAttendance() {
           }
         };
         
+        const qrCodeErrorCallback = (error: any) => {
+          // Handle errors here if needed
+          console.error("QR Code scanning error:", error);
+        };
+        
         const config = {
           fps: 10,
           qrbox: { width: 200, height: 50 },
@@ -182,18 +187,18 @@ export default function BusAttendance() {
 
         try {
           if (isInspectElement) {
-            await html5QrCode.start({ facingMode: "user" }, config, qrCodeSuccessCallback);
+            await html5QrCode.start({ facingMode: "user" }, config, qrCodeSuccessCallback, qrCodeErrorCallback);
             if (videoRef.current) {
               videoRef.current.style.transform = 'scaleX(-1)';
             }
           } else {
-            await html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
+            await html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback, qrCodeErrorCallback);
           }
         } catch (err) {
           console.error("Error starting scanner:", err);
           if (isInspectElement) {
             try {
-              await html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
+              await html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback, qrCodeErrorCallback);
             } catch (fallbackErr) {
               console.error("Error starting fallback scanner:", fallbackErr);
             }
